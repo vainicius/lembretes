@@ -1,22 +1,55 @@
 package com.example.lembretes.Controller;
 
+import com.example.lembretes.DTO.PessoaDTO;
+import com.example.lembretes.Service.PessoaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value="/desafio/pessoas")
 public class PessoaController {
-    @GetMapping("/nome")
-    public ResponseEntity<?> getByNome(@RequestParam String nome){
+    @Autowired
+    private PessoaService pessoaService;
+    @GetMapping("/todos")
+    public ResponseEntity<?> getAll() {
         try{
-            return ResponseEntity.ok(service.getByNome(nome));
+            return ResponseEntity.ok(pessoaService.findAll());
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-
+    @GetMapping("/nome")
+    public ResponseEntity<?> getByNome(@RequestParam String nome){
+        try{
+            return ResponseEntity.ok(pessoaService.getByNome(nome));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("/cadastrar")
+    public ResponseEntity<?> cadastrar(@RequestBody PessoaDTO pessoa){
+        try {
+            return ResponseEntity.ok(pessoaService.cadastrar(pessoa));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PutMapping("/editar")
+    public ResponseEntity<?> update(@RequestParam Long id, @RequestBody PessoaDTO pessoa){
+        try{
+            return ResponseEntity.ok(pessoaService.editar(id, pessoa));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/deletar")
+    public ResponseEntity<?> delete(@RequestParam Long id){
+        try{
+            pessoaService.deletar(id);
+            return ResponseEntity.ok("Sucesso ao deletar.");
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
