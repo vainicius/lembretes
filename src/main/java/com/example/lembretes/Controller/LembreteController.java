@@ -22,7 +22,7 @@ public class LembreteController {
     @PutMapping("/editar")
     public ResponseEntity<?> update(@RequestParam Long id, @RequestBody LembreteDTO lembrete){
         try{
-            return ResponseEntity.ok(lembreteService.atualizar(id, lembrete));
+            return ResponseEntity.ok(lembreteService.editar(id, lembrete));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

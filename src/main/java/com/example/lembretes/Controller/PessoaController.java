@@ -22,7 +22,7 @@ public class PessoaController {
     @GetMapping("/nome")
     public ResponseEntity<?> getByNome(@RequestParam String nome){
         try{
-            return ResponseEntity.ok(pessoaService.getByNome(nome));
+            return ResponseEntity.ok(pessoaService.GetUmNome(nome));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
