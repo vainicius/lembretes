@@ -1,8 +1,10 @@
 package com.example.lembretes.Service;
 
+import com.example.lembretes.DTO.LembreteDTO;
 import com.example.lembretes.DTO.PessoaDTO;
 import com.example.lembretes.Entity.Pessoa;
 import com.example.lembretes.Repository.PessoaRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -14,43 +16,33 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public PessoaDTO ControlePessoasDTO(Pessoa pessoa){
-        PessoaDTO pessoaDTO = new PessoaDTO();
+    private ModelMapper mapper = new ModelMapper();
 
-        pessoaDTO.setNome(pessoa.getNome());
-        pessoaDTO.setId(pessoa.getId());
 
-        return pessoaDTO;
+
+
+    public PessoaDTO toDTO(Pessoa pessoa){
+        return mapper.map(pessoa, PessoaDTO.class);
     }
-    public Pessoa ControlePessoa(PessoaDTO pessoaDTO){
-        Pessoa pessoa = new Pessoa();
-
-        pessoa.setNome(pessoaDTO.getNome());
-        pessoa.setId(pessoaDTO.getId());
-
-        return  pessoa;
+    public Pessoa toEntity(PessoaDTO pessoaDTO){
+        return mapper.map(pessoaDTO, Pessoa.class);
     }
     public List<PessoaDTO> findAll(){
 
-        List<PessoaDTO> pessoasDTO = pessoaRepository.findAll().stream().map(this::ControlePessoasDTO).toList();
+        List<PessoaDTO> pessoasDTO = pessoaRepository.findAll().stream().map(this::toDTO).toList();
 
         return  pessoasDTO;
     }
     public PessoaDTO GetUmNome(String nome){
         Pessoa pessoa = this.pessoaRepository.findUmNome(nome);
-
-        PessoaDTO pessoaDTO = ControlePessoasDTO(pessoa);
-
-        return pessoaDTO;
+        return toDTO(pessoa);
     }
-    public Pessoa cadastrar(final PessoaDTO pessoasDTO){
+    public PessoaDTO cadastrar(final PessoaDTO pessoasDTO){
         Assert.notNull(pessoasDTO.getNome(), "Por favor, informe um nome");
 
-        Pessoa pessoa = new Pessoa();
-
-        return this.pessoaRepository.save(pessoa);
+        return toDTO(pessoaRepository.save(toEntity(pessoasDTO)));
     }
-    public Pessoa editar (final Long id, PessoaDTO pessoasDTO){
+    public PessoaDTO editar (final Long id, PessoaDTO pessoasDTO){
 
         Assert.notNull(pessoasDTO.getId(), "Por favor, informe um ID válido.");
         Assert.notNull(pessoasDTO.getNome(), "Por favor, informe um nome.");
@@ -61,8 +53,7 @@ public class PessoaService {
         Assert.isTrue(pessoaBanco.getId().equals(pessoasDTO.getId()), "Pessoa informada indefere da pessoa a ser atualizada.");
 
 
-        Pessoa pessoa = ControlePessoa(pessoasDTO);
-        return this.pessoaRepository.save(pessoa);
+        return toDTO(pessoaRepository.save(toEntity(pessoasDTO)));
     }
 
     public  String deletar(final Long id){
@@ -72,6 +63,11 @@ public class PessoaService {
         this.pessoaRepository.delete(pessoaBanco);
 
         return "Deletado com sucesso!";
+    }
+
+    public PessoaDTO getById(Long id) {
+
+        return toDTO(pessoaRepository.findById(id).orElse(null));
     }
 
 }
