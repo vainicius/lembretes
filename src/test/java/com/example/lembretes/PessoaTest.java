@@ -29,7 +29,7 @@ public class PessoaTest {
 
     @Test
     void testControllerPessoa(){
-        var pessoacontroller = controller.get
+        var pessoacontroller = controller.ge
     }
 
 
