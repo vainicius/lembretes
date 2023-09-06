@@ -13,6 +13,12 @@ import java.util.List;
 public class PessoaController {
     @Autowired
     private PessoaService pessoaService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PessoaDTO> getById(@PathVariable("id") final long id) {
+        return ResponseEntity.ok(pessoaService.getById(id));
+    }
+
     @GetMapping("/todos")
     public ResponseEntity<List<PessoaDTO>> getAll() {
             return ResponseEntity.ok(pessoaService.findAll());

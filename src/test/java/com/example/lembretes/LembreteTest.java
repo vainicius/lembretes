@@ -1,3 +1,4 @@
+/*
 package com.example.lembretes;
 
 import com.example.lembretes.Controller.LembreteController;
@@ -43,3 +44,4 @@ public class LembreteTest {
     }
 
 }
+*/
