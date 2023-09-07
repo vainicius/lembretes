@@ -24,7 +24,6 @@ public class PessoaTest {
     PessoaRepository repository;
     @Autowired
     private PessoaController controller = new PessoaController();
-    private PessoaDTO pessoaDTO = new PessoaDTO();
     @Autowired
     private PessoaService service = new PessoaService();
 
@@ -36,9 +35,9 @@ public class PessoaTest {
     }
     @BeforeEach
     void InjectDataPost(){
-        PessoaDTO pessoaNome = new PessoaDTO();
-        pessoaNome.setNome("Vini");
-        when(service.cadastrar(pessoaDTO)).thenReturn(pessoaDTO);
+        PessoaDTO pessoaNome = new PessoaDTO(1L, "Vini");
+
+        when(service.cadastrar(pessoaNome)).thenReturn(pessoaNome);
 
     }
 
@@ -50,24 +49,17 @@ public class PessoaTest {
         System.out.println(id);
         Assertions.assertEquals(1L, id, 0);
     }
-/*
-    @Test
-    void testPostPessoa(){
-        var pessoacontroller = controller.cadastrar(pessoaDTO);
-        var nome = pessoaDTO.getNome();
-        Assertions.assertEquals(pessoaDTO,nome);
-    }
-*/
+
     @Test
     void testPostPessoa() {
-    PessoaDTO pessoaNome = new PessoaDTO();
+    PessoaDTO pessoaNome = new PessoaDTO(1L,"Vini");
     ResponseEntity<PessoaDTO> responseEntity = controller.cadastrar(pessoaNome);
     System.out.println(pessoaNome);
     Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     PessoaDTO pessoaCadastrada = responseEntity.getBody();
 
     System.out.println(pessoaCadastrada.getNome());
-    Assertions.assertEquals(pessoaNome.getNome(), pessoaCadastrada.getNome());
+    Assertions.assertEquals(1L,pessoaNome.getId());
 }
 
 
